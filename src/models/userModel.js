@@ -14,6 +14,19 @@ export const getUserByEmail = async (email) => {
     }
 };
 
+export const getUserById = async (userId) => {
+    try {
+        const [user] = await db.promise().query(`
+            SELECT * FROM users WHERE id = ?`,
+            [userId]
+        );
+        return [user].length > 0 ? user[0] : null; 
+    } catch (error) {
+        console.error("Error in getUserByEmail:", error);
+        throw error;
+    }
+};
+
 // ฟังก์ชันสร้าง User ใหม่ (ถ้ายังไม่มี Email นี้)
 export const createUser = async (username, email, password) => {
     try {

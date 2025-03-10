@@ -6,7 +6,7 @@ export const getTaskByUser = async (userId) => {
             SELECT * FROM tasks WHERE user_id = ?
             `, [userId]
         );
-        return task
+        return task; 
     } catch(error){
         console.error("Error",error)
         throw error
