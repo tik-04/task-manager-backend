@@ -2,8 +2,8 @@ import express from "express";
 import db from "./config/db.js";
 import bodyParser from "body-parser";
 import cors from 'cors';
-import authRoute from "./routes/authRoute.js";
-import taskRoute from "./routes/taskRoute.js";
+import authRoute from "./routes/authRoutes.js";
+import taskRoute from "./routes/taskRoutes.js";
 
 const app = express()
 const PORT = process.env.PORT
