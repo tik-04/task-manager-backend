@@ -1,5 +1,6 @@
 import db from "../config/db.js";
 
+
 // ฟังก์ชันเช็คว่ามี User อยู่แล้วหรือไม่
 export const getUserByEmail = async (email) => {
     try {
@@ -7,7 +8,7 @@ export const getUserByEmail = async (email) => {
             SELECT * FROM users WHERE email = ?`,
             [email]
         );
-        return [user].length > 0 ? user[0] : null; 
+        return user.length > 0 ? user[0] : null; 
     } catch (error) {
         console.error("Error in getUserByEmail:", error);
         throw error;
@@ -20,7 +21,7 @@ export const getUserById = async (userId) => {
             SELECT * FROM users WHERE id = ?`,
             [userId]
         );
-        return [user].length > 0 ? user[0] : null; 
+        return user.length > 0 ? user[0] : null; 
     } catch (error) {
         console.error("Error in getUserByEmail:", error);
         throw error;
@@ -28,7 +29,7 @@ export const getUserById = async (userId) => {
 };
 
 // ฟังก์ชันสร้าง User ใหม่ (ถ้ายังไม่มี Email นี้)
-export const createUser = async (username, email, password) => {
+export const createUser = async (username, email, hashedPassword) => {
     try {
         // เช็คว่า Email นี้มีอยู่หรือยัง
         const existingUser = await getUserByEmail(email);
@@ -39,7 +40,7 @@ export const createUser = async (username, email, password) => {
         // ถ้าไม่มี ให้ INSERT User ใหม่
         const [result] = await db.promise().query(
             `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`,
-            [username, email, password]
+            [username, email, hashedPassword]
         );
 
         return result.insertId; // คืนค่า id ของ User ที่เพิ่มใหม่
