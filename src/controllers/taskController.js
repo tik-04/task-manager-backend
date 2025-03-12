@@ -29,7 +29,7 @@ export const getTaskByUser = async (req,res) => {
 }
 
 export const getTaskId = async (req,res) => {
-    const  taskId = req.params.id;
+    const  taskId = req.params.taskId;
 
     try{
         if (!taskId) {
@@ -68,14 +68,14 @@ export const createdTask = async (req,res) => {
             return res.status(500).json({ success: false, message: result.message });
         }
 
-        res.json({ success: true, message: result.message})
+        return res.json({ success: true, message: result.message})
     } catch (error) {
         res.status(500).json({ message: "Server Error",error:error})
     }
 }
 
 export const updateTask = async (req,res) => {
-    const  taskId = req.params.id;
+    const  taskId = req.params.taskId;
     const { status } = req.body
 
     if (!taskId) {
@@ -92,22 +92,22 @@ export const updateTask = async (req,res) => {
             return res.status(500).json({ success: false, message: result.message });
         }
 
-        res.json({ success:true,message:result.message})
+        return res.json({ success:true,message:result.message})
     } catch (error) {
         return res.status(500).json({message: "Server Error",error:error})
     }
 }
 
 export const editTask = async (req,res) => {
-    const taskId = req.params.id
+    const taskId = req.params.taskId
     const {title,description,due_date} = req.body
 
     if (!taskId) {
-        res.status(400).json({ success:false,message:"Missing task ID"})
+        return res.status(400).json({ success:false,message:"Missing task ID"})
     }
 
     if (!title || !description || !due_date) {
-        res.status(400).json({ success:false,message:"Missing Required field."})
+        return res.status(400).json({ success:false,message:"Missing Required field."})
     }
     try {
         const result = await taskModel.editTask(taskId,title,description,due_date)
@@ -116,27 +116,27 @@ export const editTask = async (req,res) => {
             return res.status(500).json({ success: false, message: result.message });
         }
 
-        res.json({ success:true,message:result.message})
+        return res.json({ success:true,message:result.message})
     } catch(error) {
-        res.status(500).json({ message:"Internal Server Error",error:error})
+        return res.status(500).json({ message:"Internal Server Error",error:error})
     }
 }
 
 export const deleteTask = async (req,res) => {
-    const taskId = req.params.id
+    const taskId = req.params.taskId
 
     if (!taskId) {
-        res.status(400).json({ success:false,message:"Missing task ID"})
+        return res.status(400).json({ success:false,message:"Missing task ID"})
     }
     try {
         const result = await taskModel.deleteTask(taskId)
 
         if (!result.success) {
-            res.status(500).json({ success: false, message: result.message })
+            return res.status(500).json({ success: false, message: result.message })
         }
 
         return res.json({ success:true,message:result.message})
     } catch(error) {
-        res.status(500).json({message:"Internal Server Error",error:error})
+        return res.status(500).json({message:"Internal Server Error",error:error})
     }
 }
