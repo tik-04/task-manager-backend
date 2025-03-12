@@ -2,6 +2,8 @@ import express from "express";
 import db from "./config/db.js";
 import bodyParser from "body-parser";
 import cors from 'cors';
+import authRoute from "./routes/authRoute.js";
+import taskRoute from "./routes/taskRoute.js";
 
 const app = express()
 const PORT = process.env.PORT
@@ -17,7 +19,8 @@ app.get("/", (req, res) => {
 
 
 //route
-app.use('/user/:id', roomRoute)
+app.use("/auth", authRoute);
+app.use("/tasks", taskRoute);
 
 db.connect(err => {
     if (err) console.error('MySQL connection failed:', err);

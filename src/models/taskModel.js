@@ -3,7 +3,7 @@ import db from "../config/db.js";
 export const getTaskByUser = async (userId) => {
     try {
         const [task] = await db.promise().query(`
-            SELECT * FROM tasks WHERE user_id = ?
+            SELECT id, title, description, status, due_date, created_at FROM tasks WHERE user_id = ?
             `, [userId]
         );
         return task; 
@@ -48,7 +48,7 @@ export const checkTask = async (taskId) => {
             SELECT id FROM tasks WHERE id = ?
         `, [taskId]);
 
-        return checkTask.length > 0 ? true : null; // ✅ ถ้ามี task return true ถ้าไม่มี return null
+        return checkTask.length > 0; // ✅ ถ้ามี task return true ถ้าไม่มี return null
     } catch (error) {
         console.error("Error checking task:", error);
         throw error;

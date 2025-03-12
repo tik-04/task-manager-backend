@@ -1,14 +1,16 @@
 import express from 'express'
 import * as taskController from '../controllers/taskController.js'
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
 
 const taskRoute = express.Router();
 
-taskRoute.get('/tasks', taskController.getTaskByUser);
-taskRoute.get('/tasks/:taskId', taskController.getTaskId);
-taskRoute.post('/tasks', taskController.createdTask)
-taskRoute.patch('/tasks/:taskId/status', taskController.updateTask)
-taskRoute.patch('/tasks/:taskId', taskController.editTask)
-taskRoute.delete('/tasks/:taskId', taskController.deleteTask)
+taskRoute.get('/', authMiddleware, taskController.getTaskByUser);
+taskRoute.get('/:taskId', authMiddleware, taskController.getTaskId);
+taskRoute.post('/', authMiddleware, taskController.createdTask);
+taskRoute.patch('/:taskId/status', authMiddleware, taskController.updateTask);
+taskRoute.patch('/:taskId', authMiddleware, taskController.editTask);
+taskRoute.delete('/:taskId', authMiddleware, taskController.deleteTask);
+
 
 export default taskRoute

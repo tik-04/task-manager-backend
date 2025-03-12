@@ -3,7 +3,7 @@ import * as userModel from '../models/userModel.js'
 
 
 export const getTaskByUser = async (req,res) => {
-    const userId = req.params.id
+    const userId = req.user.id
 
     try {
         if (!userId) {
@@ -49,7 +49,7 @@ export const getTaskId = async (req,res) => {
 }
 
 export const createdTask = async (req,res) => {
-    const userId = req.body.id
+    const userId = req.user.id
     const { title,description,status,due_date } = req.body
 
     if (!userId) {
