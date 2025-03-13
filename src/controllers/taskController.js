@@ -78,18 +78,26 @@ export const updateTask = async (req,res) => {
     const  taskId = req.params.taskId;
     const { status } = req.body
 
-    if (!taskId) {
-        return res.status(400).json({ success : false,message: "Missing task ID"})
+    const taskExists = await taskModel.checkTask(taskId);
+    if (!taskExists) {
+        return res.status(404).json({ success: false, message: "Task not found" });
     }
+
 
     if (!status) {
         return res.status(400).json({ success:false,message: "Status is required"})
     }
     try {
+
+        const validStatuses = ["pending", "completed"];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ success: false, message: "Invalid status value" });
+        }
+
         const result = await taskModel.updateTask(taskId,status)
 
         if (!result.success){
-            return res.status(500).json({ success: false, message: result.message });
+            return res.status(400).json({ success: false, message: result.message });
         }
 
         return res.json({ success:true,message:result.message})
