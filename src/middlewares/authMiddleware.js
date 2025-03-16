@@ -17,7 +17,7 @@ export const authMiddleware = async (req,res, next) => {
             return res.status(401).json({success:false,message:"Wrong authorized"})
         }
 
-        req.user = checkToken;
+        req.user = { id: checkToken.id };
         next();
     } catch(error) {
         return res.status(500).json({ success: false, message: "Server error." });
