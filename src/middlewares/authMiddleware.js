@@ -3,18 +3,17 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 export const authMiddleware = async (req,res, next) => {
-    const authHeader = req.headers.authorization
+    const token = req.cookies.token;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({success:false,message:"Missing auth token"})
+    if (!token) {
+        return res.status(401).json({ success: false, message: "Missing auth token" });
     }
 
     try {
-        const token = authHeader.split(" ")[1]; // ดึง Token ออกจาก "Bearer JWT_TOKEN"
-        const checkToken = jwt.verify(token, process.env.JWT_SECRET)
+        const checkToken = jwt.verify(token, process.env.JWT_SECRET);
 
         if (!checkToken) {
-            return res.status(401).json({success:false,message:"Wrong authorized"})
+            return res.status(401).json({ success: false, message: "Unauthorized" });
         }
 
         req.user = { id: checkToken.id };

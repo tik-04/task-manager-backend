@@ -4,9 +4,10 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
 
+
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET   
 
 export const registerUser = async (req,res) => {
 
@@ -56,11 +57,14 @@ export const loginUser = async (req,res) => {
         const options = { expiresIn: '1d' }
         const token = jwt.sign(payload, JWT_SECRET, options)
 
-        return res.json({
-            "success": true,
-            "token": token,
-            "user": { "id": existingUser.id, "email": existingUser.email, "username": existingUser.username }
-          })
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+            maxAge: 24 * 60 * 60 * 1000 // 1 วัน
+        });
+        
+        return res.json({ success: true, message: "Login success!" });
         
 
     } catch (error) {
@@ -69,3 +73,18 @@ export const loginUser = async (req,res) => {
     }
 
 }
+
+export const logoutUser = (req, res) => {
+    res.clearCookie("token");
+    return res.json({ success: true, message: "Logged out successfully" });
+};
+
+
+export const getAuthUser = (req, res) => {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+  
+    res.json({ success: true, user: req.user });
+  };
+  

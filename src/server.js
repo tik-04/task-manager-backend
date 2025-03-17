@@ -5,14 +5,21 @@ import cors from 'cors';
 import authRoute from "./routes/authRoutes.js";
 import taskRoute from "./routes/taskRoutes.js";
 import userRoute from "./routes/userRoutes.js";
+import cookieParser from "cookie-parser"
 
 const app = express()
 const PORT = process.env.PORT
 
+const allowedOrigins = ["http://localhost:5173"];
+
 app.use(express.static('public'));
-app.use(cors());
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true 
+}));
 app.use(bodyParser.json());
 app.use(express.json());
+app.use(cookieParser())
 
 app.get("/", (req, res) => {
     res.send("Server is Working");
