@@ -89,8 +89,8 @@ export const updateTask = async (req,res) => {
     }
     try {
 
-        const validStatuses = ["pending", "completed"];
-        if (!validStatuses.includes(status)) {
+        const invalidStatuses = ["pending", "completed"];
+        if (invalidStatuses.includes(status)) {
             return res.status(400).json({ success: false, message: "Invalid status value" });
         }
 

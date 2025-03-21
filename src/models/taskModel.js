@@ -3,7 +3,10 @@ import db from "../config/db.js";
 export const getTaskByUser = async (userId) => {
     try {
         const [task] = await db.promise().query(`
-            SELECT id, title, description, status, due_date, created_at FROM tasks WHERE user_id = ?
+            SELECT id, title, description, status, due_date, created_at 
+            FROM tasks 
+            WHERE user_id = ?
+            AND status not in ('completed')
             `, [userId]
         );
         return task; 
@@ -56,7 +59,7 @@ export const checkTask = async (taskId) => {
 };
 
 
-export const updateTask = async (taskId, status) => {
+export const updateTask = async (taskId) => {
     try {
         const existingTask = await checkTask(taskId);
         if (!existingTask) {
@@ -64,8 +67,8 @@ export const updateTask = async (taskId, status) => {
         }
 
         const [result] = await db.promise().query(`
-            UPDATE tasks SET status = ? WHERE id = ?
-        `, [status, taskId]);
+            UPDATE tasks SET status = 'completed' WHERE id = ?
+        `, [taskId]);
 
         if (result.affectedRows === 0) {
             return { success: false, message: "Task update failed" }; // ✅ ถ้าไม่มีแถวถูกอัปเดต
