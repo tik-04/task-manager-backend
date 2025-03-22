@@ -148,3 +148,30 @@ export const deleteTask = async (req,res) => {
         return res.status(500).json({message:"Internal Server Error",error:error})
     }
 }
+
+export const historyTask = async (req,res) => {
+    const userId = req.user.id
+
+    try {
+        if (!userId) {
+            return res.status(400).json({ success : false,message: "Missing user ID"})
+        }
+
+        const user = await userModel.getUserById(userId)
+
+        if (!user) {
+            return res.status(400).json({ success: false, message: "User not found"})
+        }
+
+        const history = await taskModel.historyTask(userId)
+
+        if (history.length === 0) {
+            return res.status(404).json({ success: false, message: "History Task not found"})
+        }
+
+        return res.json({ success: true, data: history})
+
+    } catch (error) {
+        return res.status(500).json({message: "Internal Server Error",error:error})
+    }
+}

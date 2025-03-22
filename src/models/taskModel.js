@@ -9,6 +9,11 @@ export const getTaskByUser = async (userId) => {
             AND status not in ('completed')
             `, [userId]
         );
+
+        if (task.length === 0) {
+            return null; // ✅ Return null ถ้าไม่เจอ
+        }
+
         return task; 
     } catch(error){
         console.error("Error",error)
@@ -122,4 +127,24 @@ export const deleteTask = async (taskId) => {
         throw error;
     }
 };
+
+export const historyTask = async (userId) => {
+    try {
+        const [task] = await db.promise().query(`
+            SELECT id, title, description, status, due_date, created_at 
+            FROM tasks 
+            WHERE user_id = ?
+            `, [userId]
+        );
+
+        if (task.length === 0) {
+            return null; // ✅ Return null ถ้าไม่เจอ
+        }
+        
+        return task; 
+    } catch (error) {
+        console.error("Error fetching History Task:", error);
+        throw error;
+    }
+}
 
