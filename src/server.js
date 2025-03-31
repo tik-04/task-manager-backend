@@ -8,7 +8,7 @@ import userRoute from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser"
 
 const app = express()
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000
 
 const allowedOrigins = ["http://localhost:5173"];
 
@@ -20,6 +20,8 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser())
+
+
 
 app.get("/", (req, res) => {
     res.send("Server is Working");
