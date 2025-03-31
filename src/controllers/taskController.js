@@ -48,6 +48,27 @@ export const getTaskId = async (req,res) => {
     }
 }
 
+export const getTaskWeek = async (req,res) => {
+    const  userId = req.user.id;
+    const {start,end} = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success : false,message: "Missing User Id"})
+    }
+
+    if (!start || !end) {
+        return res.status(400).json({ success : false,message: "Missing Start or End"})
+    }
+
+    try {
+        const response = await taskModel.getTaskWeek(userId,start,end)
+        res.json(result);
+
+    } catch (error) {
+        res.status(500).json({ message: "Server Error",error:error })
+    }
+}
+
 export const createdTask = async (req,res) => {
     const userId = req.user.id
     const { title,description,status,due_date } = req.body

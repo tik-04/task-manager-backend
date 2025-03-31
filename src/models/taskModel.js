@@ -38,6 +38,30 @@ export const getTaskId = async (taskId) => {
     }
 };
 
+export const getTaskWeek = async (userId,start,end) => {
+    try {
+        const [task] = await db.promise().query(`
+            SELECT
+            DATE(due_date) AS day,
+            COUNT(*) AS total,
+            SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS done
+            FROM tasks
+            WHERE user_id = ?
+            AND due_date BETWEEN ? AND ?
+            GROUP BY DATE(due_date);
+            `, [userId,start,end]);
+        
+            return task.map(row => ({
+                day: row.day,
+                percent: row.total === 0 ? 0 : Math.round((row.done / row.total) * 100)
+             }));
+        
+    } catch(error) {
+        console.error("Error",error)
+        throw error
+    }
+}
+
 export const createTask = async (userId,title,description,status,due_date) => {
     try {
         const [result] = await db.promise().query(`
